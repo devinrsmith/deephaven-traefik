@@ -10,7 +10,7 @@ services:
       - 'traefik.http.routers.deephaven-foo.tls=true'
       - 'traefik.http.routers.deephaven-foo.rule=Host(`deephaven-foo.localhost`)'
       - 'traefik.http.services.deephaven-foo.loadbalancer.server.port=10000'
-      - "traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c"      
+      - 'traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c'
     # ports:
     #   - "5005:5005"
 
