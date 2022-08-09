@@ -1,0 +1,30 @@
+version: '3'
+
+name: deephaven
+
+services:
+  deephaven-foo:
+    build: server/
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.deephaven-foo.tls=true'
+      - 'traefik.http.routers.deephaven-foo.rule=Host(`deephaven-foo.localhost`)'
+      - 'traefik.http.services.deephaven-foo.loadbalancer.server.port=10000'
+      - "traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c"      
+    # ports:
+    #   - "5005:5005"
+
+  reverse-proxy:
+    image: traefik:v2.8
+    command:
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedByDefault=false'
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web-secure.address=:443'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
