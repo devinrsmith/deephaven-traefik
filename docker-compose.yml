@@ -1,18 +1,25 @@
 version: '3'
 
-name: deephaven
+name: deephaven-traefik
 
 services:
   deephaven-foo:
-    build: server/
+    build: deephaven/
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.deephaven-foo.tls=true'
       - 'traefik.http.routers.deephaven-foo.rule=Host(`deephaven-foo.localhost`)'
       - 'traefik.http.services.deephaven-foo.loadbalancer.server.port=10000'
       - 'traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c'
-    # ports:
-    #   - "5005:5005"
+
+  deephaven-bar:
+    build: deephaven/
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.deephaven-foo.tls=true'
+      - 'traefik.http.routers.deephaven-foo.rule=Host(`deephaven-foo.localhost`)'
+      - 'traefik.http.services.deephaven-foo.loadbalancer.server.port=10000'
+      - 'traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c'
 
   reverse-proxy:
     image: traefik:v2.8

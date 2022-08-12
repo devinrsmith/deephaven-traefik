@@ -1,4 +1,4 @@
-<configuration debug="true">
+<configuration debug="false">
   <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/>
 
   <!-- System.out / System.err may be redirected (and captured by LogBuffer).
@@ -21,11 +21,10 @@
 
   <!-- individual package levels can be change -->
   <!--<logger name="io.netty" level="INFO"/>-->
-  <logger name="io.deephaven" level="INFO"/>
-
-  <logger name="io.grpc" level="DEBUG"/>
+  <!-- <logger name="io.deephaven" level="INFO"/> -->
+  <!-- <logger name="io.grpc" level="INFO"/> -->
   
-  <root level="DEBUG">
+  <root level="info">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="LOGBUFFER" />
   </root>
