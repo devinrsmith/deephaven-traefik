@@ -3,35 +3,56 @@ version: '3'
 name: deephaven-traefik
 
 services:
-  deephaven-foo:
-    image: ghcr.io/deephaven/server:0.21.0
+  foo:
+    image: deephaven/server:proxyfix
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.deephaven-foo.tls=true'
-      - 'traefik.http.routers.deephaven-foo.rule=Host(`deephaven-foo.localhost`)'
-      - 'traefik.http.services.deephaven-foo.loadbalancer.server.port=10000'
-      - 'traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c'
+      - 'traefik.http.routers.foo.tls=true'
+      - 'traefik.http.routers.foo.tls.certresolver=tailscale'
+      - 'traefik.http.routers.foo.tls.domains[0].main=felian.buffalo-snake.ts.net'
+      - 'traefik.http.routers.foo.rule=PathPrefix(`/foo/`) || HeaderRegexp(`Referer`, `https://felian.buffalo-snake.ts.net/foo/.*`)'
+      - 'traefik.http.routers.foo.middlewares=foo_stripprefix'
+      - 'traefik.http.middlewares.foo_stripprefix.stripprefix.prefixes=/foo,/foo/'
+      - 'traefik.http.services.foo.loadbalancer.server.port=10000'
+      - 'traefik.http.services.foo.loadbalancer.server.scheme=h2c'
 
-  deephaven-bar:
-    image: ghcr.io/deephaven/server:0.21.0
+  bar:
+    image: deephaven/server:proxyfix
     labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.deephaven-bar.tls=true'
-      - 'traefik.http.routers.deephaven-bar.rule=Host(`deephaven-bar.localhost`)'
-      - 'traefik.http.services.deephaven-bar.loadbalancer.server.port=10000'
-      - 'traefik.http.services.deephaven-bar.loadbalancer.server.scheme=h2c'
+      - 'traefik.http.routers.bar.tls=true'
+      - 'traefik.http.routers.bar.tls.certresolver=tailscale'
+      - 'traefik.http.routers.bar.tls.domains[0].main=felian.buffalo-snake.ts.net'
+      - 'traefik.http.routers.bar.rule=PathPrefix(`/bar/`) || HeaderRegexp(`Referer`, `https://felian.buffalo-snake.ts.net/bar/.*`)'
+      - 'traefik.http.routers.bar.middlewares=bar_stripprefix'
+      - 'traefik.http.middlewares.bar_stripprefix.stripprefix.prefixes=/bar,/bar/'
+      - 'traefik.http.services.bar.loadbalancer.server.port=10000'
+      - 'traefik.http.services.bar.loadbalancer.server.scheme=h2c'
+
+  baz:
+    image: deephaven/server:proxyfix
+    labels:
+      - 'traefik.http.routers.baz.tls=true'
+      - 'traefik.http.routers.baz.tls.certresolver=tailscale'
+      - 'traefik.http.routers.baz.tls.domains[0].main=felian.buffalo-snake.ts.net'
+      - 'traefik.http.routers.baz.rule=PathPrefix(`/baz/`) || HeaderRegexp(`Referer`, `https://felian.buffalo-snake.ts.net/baz/.*`)'
+      - 'traefik.http.routers.baz.middlewares=baz_stripprefix'
+      - 'traefik.http.middlewares.baz_stripprefix.stripprefix.prefixes=/baz,/baz/'
+      - 'traefik.http.services.baz.loadbalancer.server.port=10000'
+      - 'traefik.http.services.baz.loadbalancer.server.scheme=h2c'
 
   reverse-proxy:
-    image: traefik:v2.9
+    image: traefik:v3.0
     command:
       - '--api.insecure=true'
       - '--providers.docker=true'
-      - '--providers.docker.exposedByDefault=false'
+      - '--providers.docker.constraints=Label(`io.deephaven.image.type`,`server`)'
       - '--entrypoints.web.address=:80'
       - '--entrypoints.web-secure.address=:443'
+      - '--certificatesresolvers.tailscale.tailscale=true'
     ports:
       - '80:80'
       - '443:443'
+      - '443:443/udp'
       - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
