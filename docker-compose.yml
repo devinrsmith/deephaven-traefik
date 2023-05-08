@@ -4,7 +4,7 @@ name: deephaven-traefik
 
 services:
   foo:
-    image: ghcr.io/devinrsmith/server:proxyfix
+    image: ghcr.io/deephaven/server:0.24.0
     labels:
       - 'traefik.http.routers.foo.tls=true'
       - 'traefik.http.routers.foo.tls.certresolver=tailscale'
@@ -16,7 +16,7 @@ services:
       - 'traefik.http.services.foo.loadbalancer.server.scheme=h2c'
 
   bar:
-    image: ghcr.io/devinrsmith/server:proxyfix
+    image: ghcr.io/deephaven/server:0.24.0
     labels:
       - 'traefik.http.routers.bar.tls=true'
       - 'traefik.http.routers.bar.tls.certresolver=tailscale'
@@ -28,7 +28,7 @@ services:
       - 'traefik.http.services.bar.loadbalancer.server.scheme=h2c'
 
   baz:
-    image: ghcr.io/devinrsmith/server:proxyfix
+    image: ghcr.io/deephaven/server:0.24.0
     labels:
       - 'traefik.http.routers.baz.tls=true'
       - 'traefik.http.routers.baz.tls.certresolver=tailscale'
