@@ -4,7 +4,7 @@ name: deephaven-traefik
 
 services:
   deephaven-foo:
-    image: ghcr.io/deephaven/server:0.33.0
+    image: ghcr.io/deephaven/server:0.33.1
     volumes:
       - ./deephaven.prop:/opt/deephaven/config/deephaven.prop:ro
     labels:
@@ -15,7 +15,7 @@ services:
       - 'traefik.http.services.deephaven-foo.loadbalancer.server.scheme=h2c'
 
   deephaven-bar:
-    image: ghcr.io/deephaven/server:0.33.0
+    image: ghcr.io/deephaven/server:0.33.1
     volumes:
       - ./deephaven.prop:/opt/deephaven/config/deephaven.prop:ro
     labels:
