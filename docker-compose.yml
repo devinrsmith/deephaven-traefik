@@ -24,7 +24,7 @@ services:
       - 'traefik.http.services.deephaven-bar.loadbalancer.server.scheme=h2c'
 
   reverse-proxy:
-    image: traefik:v3.4
+    image: traefik:v3.5
     command:
       - '--api.insecure=true'
       - '--providers.docker=true'
